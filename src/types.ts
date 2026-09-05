@@ -340,3 +340,22 @@ export interface InitiativeRecord {
   updatedAt?: string;
 }
 
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  department: string;
+  badgeCode: string;
+  accessLevel: 'executive' | 'operational';
+  lastLogin?: string;
+}
+
+export type TabPageKey =
+  | 'dashboard'
+  | 'savings'
+  | 'active_avl'
+  | 'under_dev'
+  | 'quotations'
+  | 'process_improvement';
+

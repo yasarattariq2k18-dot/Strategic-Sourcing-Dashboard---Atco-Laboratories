@@ -1,16 +1,24 @@
 import React from 'react';
-import { Menu, UploadCloud, RefreshCw, Download, DollarSign, Database, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Menu, UploadCloud, RefreshCw, Download, DollarSign, Database, Sparkles, CheckCircle2, LogOut, User } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { CurrencyMode } from '../types';
+import { CurrencyMode, AuthUser } from '../types';
 import { AtcoLogo } from './AtcoLogo';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
   onOpenUpload: () => void;
   isSidebarOpen: boolean;
+  currentUser?: AuthUser | null;
+  onLogout?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenUpload, isSidebarOpen }) => {
+export const Header: React.FC<HeaderProps> = ({
+  onToggleSidebar,
+  onOpenUpload,
+  isSidebarOpen,
+  currentUser,
+  onLogout,
+}) => {
   const { currency, setCurrency, resetAllDataToDefault } = useData();
 
   return (
@@ -109,6 +117,32 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenUpload, i
               </span>
             </div>
           </div>
+
+          {/* User Profile & Logout Button */}
+          {currentUser && (
+            <div className="flex items-center gap-2 pl-3 border-l border-slate-700/80">
+              <div className="hidden xl:flex flex-col text-right">
+                <span className="text-xs font-black text-white leading-none truncate max-w-[150px]">
+                  {currentUser.name}
+                </span>
+                <span className={`text-[10px] font-bold leading-none mt-1 ${currentUser.accessLevel === 'operational' ? 'text-emerald-400' : 'text-blue-400'}`}>
+                  {currentUser.accessLevel === 'operational' ? 'SCM Ops (Full Suite)' : currentUser.role}
+                </span>
+              </div>
+
+              {onLogout && (
+                <button
+                  id="header-logout-btn"
+                  onClick={onLogout}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-slate-800 hover:bg-rose-900/70 text-slate-300 hover:text-rose-200 border border-slate-700 hover:border-rose-700/80 transition-all cursor-pointer"
+                  title="Sign Out of Strategic Dashboard"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

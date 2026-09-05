@@ -10,16 +10,21 @@ import {
   TrendingUp,
   Mail,
   Sparkles,
+  LogOut,
+  User,
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { AtcoLogo } from './AtcoLogo';
+import { AuthUser, TabPageKey } from '../types';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  currentPage: 'page1' | 'page2' | 'page3' | 'page4' | 'page5' | 'page6';
-  setCurrentPage: (p: 'page1' | 'page2' | 'page3' | 'page4' | 'page5' | 'page6') => void;
+  currentPage: TabPageKey;
+  setCurrentPage: (p: TabPageKey) => void;
   onOpenUpload: () => void;
+  currentUser?: AuthUser | null;
+  onLogout?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -28,53 +33,95 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentPage,
   setCurrentPage,
   onOpenUpload,
+  currentUser,
+  onLogout,
 }) => {
   const { currency } = useData();
 
-  const navPages = [
-    {
-      id: 'page1' as const,
-      label: '1. Executive Dashboard & Trees',
-      desc: 'Top 4 Cards, 2 Trees, 6 Charts, 3 Matrices & Initiatives',
-      icon: LayoutDashboard,
-      badge: 'Main',
-    },
-    {
-      id: 'page2' as const,
-      label: '2. Procurement Saving Details',
-      desc: 'Matured, CPHI, Project & Historic POs',
-      icon: DollarSign,
-      badge: '$3.2M',
-    },
-    {
-      id: 'page3' as const,
-      label: '3. Active Profile & AVL Status',
-      desc: '445 Active Materials, 728 Mfg & Origins',
-      icon: ShieldCheck,
-      badge: '445 SKUs',
-    },
-    {
-      id: 'page4' as const,
-      label: '4. Under Development Details',
-      desc: '4 Pipeline Stages, Quotes & Lab Studies',
-      icon: Layers,
-      badge: '4 Stages',
-    },
-    {
-      id: 'page5' as const,
-      label: '5. Indentor Quotes & Email Extractor',
-      desc: 'Outlook & Excel Rate Extraction & Audit Hub',
-      icon: Mail,
-      badge: 'New Hub',
-    },
-    {
-      id: 'page6' as const,
-      label: '6. Process Improvement & Digitalization',
-      desc: '12 Performed Initiatives & 3 Upcoming Projects (pr.pdf)',
-      icon: Sparkles,
-      badge: '15 Init',
-    },
-  ];
+  const isOperational = currentUser?.accessLevel === 'operational';
+
+  const navPages = isOperational
+    ? [
+        {
+          id: 'dashboard' as const,
+          label: '1. Executive Dashboard & Trees',
+          desc: 'Top 4 Cards, 2 Trees, 6 Charts, 3 Matrices & Initiatives',
+          icon: LayoutDashboard,
+          badge: 'Main',
+        },
+        {
+          id: 'savings' as const,
+          label: '2. Procurement Saving Details',
+          desc: 'Matured, CPHI, Project & Historic POs',
+          icon: DollarSign,
+          badge: '$3.2M',
+        },
+        {
+          id: 'active_avl' as const,
+          label: '3. Active Profile & AVL Status',
+          desc: '445 Active Materials, 728 Mfg & Origins',
+          icon: ShieldCheck,
+          badge: '445 SKUs',
+        },
+        {
+          id: 'under_dev' as const,
+          label: '4. Under Development Pipeline',
+          desc: '4 Pipeline Stages, Quotes & Lab Studies',
+          icon: Layers,
+          badge: '4 Stages',
+        },
+        {
+          id: 'quotations' as const,
+          label: '5. Indentor Quotes & Email Extractor',
+          desc: 'Outlook & Excel Rate Extraction & Audit Hub',
+          icon: Mail,
+          badge: 'SCM Ops',
+        },
+        {
+          id: 'process_improvement' as const,
+          label: '6. Process Improvement & Digitalization',
+          desc: '12 Performed Initiatives & 3 In-Progress Projects',
+          icon: Sparkles,
+          badge: '15 Init',
+        },
+      ]
+    : [
+        {
+          id: 'dashboard' as const,
+          label: '1. Executive Dashboard & Trees',
+          desc: 'Top 4 Cards, 2 Trees, 6 Charts, 3 Matrices & Initiatives',
+          icon: LayoutDashboard,
+          badge: 'Main',
+        },
+        {
+          id: 'savings' as const,
+          label: '2. Procurement Saving Details',
+          desc: 'Matured, CPHI, Project & Historic POs',
+          icon: DollarSign,
+          badge: '$3.2M',
+        },
+        {
+          id: 'active_avl' as const,
+          label: '3. Active Profile & AVL Status',
+          desc: '445 Active Materials, 728 Mfg & Origins',
+          icon: ShieldCheck,
+          badge: '445 SKUs',
+        },
+        {
+          id: 'under_dev' as const,
+          label: '4. Under Development Pipeline',
+          desc: '4 Pipeline Stages, Quotes & Lab Studies',
+          icon: Layers,
+          badge: '4 Stages',
+        },
+        {
+          id: 'process_improvement' as const,
+          label: '5. Process Improvement & Digitalization',
+          desc: '12 Performed Initiatives & 3 In-Progress Projects',
+          icon: Sparkles,
+          badge: '15 Init',
+        },
+      ];
 
 
   return (
@@ -173,13 +220,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/60 text-xs">
+        <div className="p-4 border-t border-slate-800 bg-slate-950/80 text-xs space-y-3">
+          {currentUser && (
+            <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <div className="min-w-0 pr-2">
+                <div className="font-black text-white text-xs truncate">{currentUser.name}</div>
+                <div className="text-[10px] text-blue-400 truncate">{currentUser.role}</div>
+              </div>
+              {onLogout && (
+                <button
+                  onClick={() => {
+                    onLogout();
+                    onClose();
+                  }}
+                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/60 text-slate-300 hover:text-rose-300 transition-colors border border-slate-700 cursor-pointer"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center justify-between text-slate-400 text-[11px]">
             <span>Active Currency:</span>
             <span className="font-bold text-white">{currency}</span>
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">
-            Atco Laboratories Sourcing DSS v2.6
+          <div className="text-[10px] text-slate-500">
+            Atco Laboratories Sourcing DSS v4.2 • cGMP Governed
           </div>
         </div>
       </aside>

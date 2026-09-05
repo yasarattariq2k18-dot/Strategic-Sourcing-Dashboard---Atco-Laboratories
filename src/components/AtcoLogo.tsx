@@ -3,63 +3,54 @@ import React from 'react';
 interface AtcoLogoProps {
   className?: string;
   size?: number | string;
-  showText?: boolean;
 }
 
 /**
- * Official Atco Laboratory Emblem (as provided in brand reference).
- * Features the signature circular mark divided into four corporate blue sectors
- * with a white central tree/arrow emblem of life and progress.
+ * Official Atco Laboratory Emblem & Logo.
+ * Pure circular emblem with 4 blue sectors and central white arrow/spire negative space.
  */
 export const AtcoLogo: React.FC<AtcoLogoProps> = ({
   className = 'w-10 h-10',
   size,
-  showText = false,
 }) => {
   return (
-    <div className={`inline-flex items-center gap-2.5 ${showText ? 'flex-col sm:flex-row' : ''}`}>
+    <div className="inline-flex items-center justify-center flex-shrink-0">
       <svg
-        className={`${className} flex-shrink-0 drop-shadow-sm`}
+        className={`${className} flex-shrink-0 select-none`}
         style={size ? { width: size, height: size } : undefined}
-        viewBox="0 0 100 100"
+        viewBox="0 0 200 200"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        aria-label="Atco Laboratory Official Logo"
+        aria-label="Atco Laboratories Logo"
         role="img"
       >
-        {/* Crisp white backing ensuring the negative-space tree is solid white across any background */}
-        <circle cx="50" cy="50" r="48" fill="#ffffff" />
+        {/* Background White Circle for Contrast / Transparency Safety */}
+        <circle cx="100" cy="100" r="98" fill="#ffffff" />
 
-        {/* Top-Left Corporate Blue Sail */}
+        {/* 1. Top-Left Blue Sector */}
         <path
-          d="M 50 2 A 48 48 0 0 0 3.79 63 C 28 50, 46 22, 50 2 Z"
+          d="M 100 2 A 98 98 0 0 0 8 122 L 8 122 C 60 90, 94 40, 100 2 Z"
           fill="#0082cb"
         />
 
-        {/* Top-Right Corporate Blue Sail */}
+        {/* 2. Top-Right Blue Sector */}
         <path
-          d="M 50 2 A 48 48 0 0 1 96.21 63 C 72 50, 54 22, 50 2 Z"
+          d="M 100 2 A 98 98 0 0 1 192 122 L 192 122 C 140 90, 106 40, 100 2 Z"
           fill="#0082cb"
         />
 
-        {/* Bottom-Left Corporate Blue Quadrant Block */}
+        {/* 3. Bottom-Left Blue Sector */}
         <path
-          d="M 43 69 L 5.92 69 A 48 48 0 0 0 43 97.49 L 43 69 Z"
+          d="M 14 132 A 98 98 0 0 0 91 197.6 L 91 114 L 14 132 Z"
           fill="#0082cb"
         />
 
-        {/* Bottom-Right Corporate Blue Quadrant Block */}
+        {/* 4. Bottom-Right Blue Sector */}
         <path
-          d="M 57 69 L 94.08 69 A 48 48 0 0 1 57 97.49 L 57 69 Z"
+          d="M 109 114 L 109 197.6 A 98 98 0 0 0 186 132 L 109 114 Z"
           fill="#0082cb"
         />
       </svg>
-
-      {showText && (
-        <span className="font-black text-[#0082cb] tracking-wider text-sm sm:text-base leading-none">
-          ATCO
-        </span>
-      )}
     </div>
   );
 };

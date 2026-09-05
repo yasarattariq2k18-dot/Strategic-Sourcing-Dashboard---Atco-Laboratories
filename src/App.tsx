@@ -15,6 +15,8 @@ import { ProcessImprovementSection } from './components/ProcessImprovementSectio
 import { UploadModal } from './components/UploadModal';
 import { DetailModal } from './components/DetailModal';
 import { AtcoLogo } from './components/AtcoLogo';
+import { LoginPage } from './components/LoginPage';
+import { AuthUser, TabPageKey } from './types';
 import {
   LayoutDashboard,
   DollarSign,
@@ -27,10 +29,15 @@ import {
   X,
 } from 'lucide-react';
 
-const DashboardContent: React.FC = () => {
+interface DashboardContentProps {
+  currentUser: AuthUser;
+  onLogout: () => void;
+}
+
+const DashboardContent: React.FC<DashboardContentProps> = ({ currentUser, onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<'page1' | 'page2' | 'page3' | 'page4' | 'page5' | 'page6'>('page1');
+  const [currentPage, setCurrentPage] = useState<TabPageKey>('dashboard');
   const [activeTreeModal, setActiveTreeModal] = useState<'material' | 'savings' | null>(null);
   const [processImprovementModal, setProcessImprovementModal] = useState<{
     isOpen: boolean;
@@ -46,12 +53,86 @@ const DashboardContent: React.FC = () => {
   };
 
   const openUnderDevSegment = () => {
-    setCurrentPage('page4');
+    setCurrentPage('under_dev');
   };
 
   const openProcessImprovementModal = (tab: 'performed' | 'upcoming' | 'both' = 'performed') => {
     setProcessImprovementModal({ isOpen: true, tab });
   };
+
+  const isOperational = currentUser.accessLevel === 'operational';
+
+  const navTabs = isOperational
+    ? [
+        {
+          id: 'dashboard' as const,
+          label: '1. Executive Dashboard',
+          icon: LayoutDashboard,
+          activeClass: 'bg-blue-600 text-white shadow-xs border border-blue-700',
+        },
+        {
+          id: 'savings' as const,
+          label: '2. Procurement Savings Details',
+          icon: DollarSign,
+          activeClass: 'bg-emerald-600 text-white shadow-xs border border-emerald-700',
+        },
+        {
+          id: 'active_avl' as const,
+          label: '3. Active Profile & AVL Status',
+          icon: ShieldCheck,
+          activeClass: 'bg-blue-700 text-white shadow-xs border border-blue-800',
+        },
+        {
+          id: 'under_dev' as const,
+          label: '4. Under Development Pipeline',
+          icon: FlaskConical,
+          activeClass: 'bg-purple-700 text-white shadow-xs border border-purple-800',
+        },
+        {
+          id: 'quotations' as const,
+          label: '5. Indentor Quotations & Email Extractor',
+          icon: Mail,
+          activeClass: 'bg-indigo-600 text-white shadow-xs border border-indigo-700',
+        },
+        {
+          id: 'process_improvement' as const,
+          label: '6. Process Improvement & Digitalization',
+          icon: Sparkles,
+          activeClass: 'bg-slate-900 text-white shadow-xs border border-slate-950',
+        },
+      ]
+    : [
+        {
+          id: 'dashboard' as const,
+          label: '1. Executive Dashboard',
+          icon: LayoutDashboard,
+          activeClass: 'bg-blue-600 text-white shadow-xs border border-blue-700',
+        },
+        {
+          id: 'savings' as const,
+          label: '2. Procurement Savings Details',
+          icon: DollarSign,
+          activeClass: 'bg-emerald-600 text-white shadow-xs border border-emerald-700',
+        },
+        {
+          id: 'active_avl' as const,
+          label: '3. Active Profile & AVL Status',
+          icon: ShieldCheck,
+          activeClass: 'bg-blue-700 text-white shadow-xs border border-blue-800',
+        },
+        {
+          id: 'under_dev' as const,
+          label: '4. Under Development Pipeline',
+          icon: FlaskConical,
+          activeClass: 'bg-purple-700 text-white shadow-xs border border-purple-800',
+        },
+        {
+          id: 'process_improvement' as const,
+          label: '5. Process Improvement & Digitalization',
+          icon: Sparkles,
+          activeClass: 'bg-slate-900 text-white shadow-xs border border-slate-950',
+        },
+      ];
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -60,6 +141,8 @@ const DashboardContent: React.FC = () => {
         onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
         onOpenUpload={() => setIsUploadOpen(true)}
         isSidebarOpen={isSidebarOpen}
+        currentUser={currentUser}
+        onLogout={onLogout}
       />
 
       {/* 2. Slideout Sidebar Navigation */}
@@ -69,6 +152,8 @@ const DashboardContent: React.FC = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         onOpenUpload={() => setIsUploadOpen(true)}
+        currentUser={currentUser}
+        onLogout={onLogout}
       />
 
       {/* 3. Main Body Container */}
@@ -76,89 +161,31 @@ const DashboardContent: React.FC = () => {
         
         {/* Segment Tabs Navigation Bar - Crisp Rectangular Format */}
         <div className="bg-white rounded-none p-1.5 border border-slate-300 shadow-xs flex items-center gap-1.5 overflow-x-auto select-none">
-          <button
-            id="tab-page-1"
-            onClick={() => setCurrentPage('page1')}
-            className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
-              currentPage === 'page1'
-                ? 'bg-blue-600 text-white shadow-xs border border-blue-700'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-            }`}
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            <span>1. Executive Dashboard</span>
-          </button>
-
-          <button
-            id="tab-page-2"
-            onClick={() => setCurrentPage('page2')}
-            className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
-              currentPage === 'page2'
-                ? 'bg-emerald-600 text-white shadow-xs border border-emerald-700'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-            }`}
-          >
-            <DollarSign className="w-4 h-4" />
-            <span>2. Procurement Savings Details</span>
-          </button>
-
-          <button
-            id="tab-page-3"
-            onClick={() => setCurrentPage('page3')}
-            className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
-              currentPage === 'page3'
-                ? 'bg-blue-700 text-white shadow-xs border border-blue-800'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-            }`}
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>3. Active Profile & AVL Status</span>
-          </button>
-
-          <button
-            id="tab-page-4"
-            onClick={() => setCurrentPage('page4')}
-            className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
-              currentPage === 'page4'
-                ? 'bg-purple-700 text-white shadow-xs border border-purple-800'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-            }`}
-          >
-            <FlaskConical className="w-4 h-4" />
-            <span>4. Under Development Pipeline</span>
-          </button>
-
-          <button
-            id="tab-page-5"
-            onClick={() => setCurrentPage('page5')}
-            className={`flex-1 min-w-[220px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
-              currentPage === 'page5'
-                ? 'bg-indigo-600 text-white shadow-xs border border-indigo-700'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-            }`}
-          >
-            <Mail className="w-4 h-4" />
-            <span>5. Indentor Quotations & Email Extractor</span>
-          </button>
-
-          <button
-            id="tab-page-6"
-            onClick={() => setCurrentPage('page6')}
-            className={`flex-1 min-w-[240px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
-              currentPage === 'page6'
-                ? 'bg-slate-900 text-white shadow-xs border border-slate-950'
-                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-indigo-400" />
-            <span>6. Process Improvement & Digitalization</span>
-          </button>
+          {navTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = currentPage === tab.id;
+            return (
+              <button
+                key={tab.id}
+                id={`tab-${tab.id}`}
+                onClick={() => setCurrentPage(tab.id)}
+                className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 py-2.5 px-4 rounded-none text-xs font-black transition-all cursor-pointer ${
+                  isActive
+                    ? tab.activeClass
+                    : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* ========================================================= */}
-        {/* PAGE 1: EXECUTIVE DASHBOARD (ALL RECTANGULAR & POPUP TREES) */}
+        {/* 1. EXECUTIVE DASHBOARD (ALL RECTANGULAR & POPUP TREES) */}
         {/* ========================================================= */}
-        {currentPage === 'page1' && (
+        {currentPage === 'dashboard' && (
           <div className="space-y-8">
             {/* Step 1: Top 4 Rectangular Executive KPI Cards */}
             <section id="overview">
@@ -187,29 +214,29 @@ const DashboardContent: React.FC = () => {
         )}
 
         {/* ========================================================= */}
-        {/* PAGE 2: PROCUREMENT SAVING DETAILS (SEGMENT 2) */}
+        {/* 2. PROCUREMENT SAVING DETAILS */}
         {/* ========================================================= */}
-        {currentPage === 'page2' && <ProcurementSavingsPage />}
+        {currentPage === 'savings' && <ProcurementSavingsPage />}
 
         {/* ========================================================= */}
-        {/* PAGE 3: ACTIVE PROFILE & AVL STATUS (SEGMENT 3) */}
+        {/* 3. ACTIVE PROFILE & AVL STATUS */}
         {/* ========================================================= */}
-        {currentPage === 'page3' && <ActiveProfileAvlPage />}
+        {currentPage === 'active_avl' && <ActiveProfileAvlPage />}
 
         {/* ========================================================= */}
-        {/* PAGE 4: UNDER DEVELOPMENT ALL DETAILS (SEGMENT 4) */}
+        {/* 4. UNDER DEVELOPMENT PIPELINE */}
         {/* ========================================================= */}
-        {currentPage === 'page4' && <UnderDevelopmentPage />}
+        {currentPage === 'under_dev' && <UnderDevelopmentPage />}
 
         {/* ========================================================= */}
-        {/* PAGE 5: INDENTOR INQUIRIES, QUOTATIONS & EMAIL EXTRACTOR (SEGMENT 5) */}
+        {/* 5. INDENTOR INQUIRIES, QUOTATIONS & EMAIL EXTRACTOR (OPERATIONAL ACCESS) */}
         {/* ========================================================= */}
-        {currentPage === 'page5' && <VendorInquiriesQuotesPage />}
+        {currentPage === 'quotations' && <VendorInquiriesQuotesPage />}
 
         {/* ========================================================= */}
-        {/* PAGE 6: PROCESS IMPROVEMENT & DIGITAL TRANSFORMATION INITIATIVES */}
+        {/* 6. PROCESS IMPROVEMENT & DIGITAL TRANSFORMATION INITIATIVES */}
         {/* ========================================================= */}
-        {currentPage === 'page6' && (
+        {currentPage === 'process_improvement' && (
           <div className="space-y-6">
             <ProcessImprovementSection />
           </div>
@@ -223,11 +250,10 @@ const DashboardContent: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <AtcoLogo className="w-6 h-6" />
-            <span className="font-bold text-slate-200">Atco Laboratory Limited</span>
-            <span>• Commercial Procurement, Import & Strategic Sourcing Intelligence</span>
+            <span className="font-semibold text-slate-200">© 2026 ATCO Laboratories Limited.</span>
           </div>
-          <div className="text-right font-medium text-slate-300">
-            Prepared By: <span className="font-bold text-white">Yasarat Tariq</span> from Sourcing Department
+          <div className="text-right font-semibold text-slate-200">
+            Prepared By: <span className="text-white font-bold">Yasarat Tariq</span> from Sourcing Department
           </div>
         </div>
       </footer>
@@ -335,9 +361,41 @@ const DashboardContent: React.FC = () => {
 };
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
+    try {
+      const saved = sessionStorage.getItem('atco_auth_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const handleLogin = (user: AuthUser) => {
+    setCurrentUser(user);
+    try {
+      sessionStorage.setItem('atco_auth_user', JSON.stringify(user));
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    try {
+      sessionStorage.removeItem('atco_auth_user');
+      localStorage.removeItem('atco_auth_user');
+    } catch {
+      // ignore
+    }
+  };
+
+  if (!currentUser) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   return (
     <DataProvider>
-      <DashboardContent />
+      <DashboardContent currentUser={currentUser} onLogout={handleLogout} />
     </DataProvider>
   );
 }

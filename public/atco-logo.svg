@@ -1,16 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Background White Circle to ensure negative space is opaque white on dark headers -->
-  <circle cx="50" cy="50" r="48" fill="#ffffff" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background White Circle for Contrast / Transparency Safety -->
+  <circle cx="100" cy="100" r="98" fill="#ffffff" />
   
-  <!-- Top-Left Sail -->
-  <path d="M 50 2 A 48 48 0 0 0 3.79 63 C 28 50, 46 22, 50 2 Z" fill="#0082cb" />
+  <!-- 1. Top-Left Blue Sector -->
+  <path d="M 100 2 A 98 98 0 0 0 8 122 L 8 122 C 60 90, 94 40, 100 2 Z" fill="#0082cb" />
 
-  <!-- Top-Right Sail -->
-  <path d="M 50 2 A 48 48 0 0 1 96.21 63 C 72 50, 54 22, 50 2 Z" fill="#0082cb" />
+  <!-- 2. Top-Right Blue Sector -->
+  <path d="M 100 2 A 98 98 0 0 1 192 122 L 192 122 C 140 90, 106 40, 100 2 Z" fill="#0082cb" />
 
-  <!-- Bottom-Left Quadrant Block -->
-  <path d="M 43 69 L 5.92 69 A 48 48 0 0 0 43 97.49 L 43 69 Z" fill="#0082cb" />
+  <!-- 3. Bottom-Left Blue Sector -->
+  <path d="M 14 132 A 98 98 0 0 0 91 197.6 L 91 114 L 14 132 Z" fill="#0082cb" />
 
-  <!-- Bottom-Right Quadrant Block -->
-  <path d="M 57 69 L 94.08 69 A 48 48 0 0 1 57 97.49 L 57 69 Z" fill="#0082cb" />
+  <!-- 4. Bottom-Right Blue Sector -->
+  <path d="M 109 114 L 109 197.6 A 98 98 0 0 0 186 132 L 109 114 Z" fill="#0082cb" />
 </svg>
