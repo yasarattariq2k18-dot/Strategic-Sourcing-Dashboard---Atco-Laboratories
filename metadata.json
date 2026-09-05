@@ -1,0 +1,6 @@
+{
+  "name": "Strategic Sourcing & Procurement Dashboard - Atco Laboratories",
+  "description": "Executive Director Level Strategic Sourcing, Import and Procurement Dashboard for Atco Laboratories featuring material hierarchy trees, savings trees, live KPIs, real-time analytics, monthly CSV data management, and Outlook email/Excel vendor quotation extraction with indentor comparison and audit conduction tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
