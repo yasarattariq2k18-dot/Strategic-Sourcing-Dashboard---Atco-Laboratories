@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { formatCurrency } from '../utils/currency';
+import { RankingsTopCharts } from './RankingsTopCharts';
 
 export const ExecutiveChartsAnalysis: React.FC = () => {
   const { currency, openDetailModal, masterData } = useData();
@@ -472,6 +473,9 @@ export const ExecutiveChartsAnalysis: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Primary Executive Top 10, 20, 30 Manufacturer & Indentor Analytics Charts */}
+      <RankingsTopCharts />
 
       {/* ------------------------------------------------------------- */}
       {/* ROW 1: 1st & 2nd CHARTS (Single/Multi & Single/Multi/Fixed Source) */}

@@ -347,7 +347,7 @@ export interface AuthUser {
   role: string;
   department: string;
   badgeCode: string;
-  accessLevel: 'executive' | 'operational';
+  accessLevel: 'management' | 'operational';
   lastLogin?: string;
 }
 
@@ -356,6 +356,174 @@ export type TabPageKey =
   | 'savings'
   | 'active_avl'
   | 'under_dev'
-  | 'quotations'
-  | 'process_improvement';
+  | 'process_improvement'
+  | 'alternate_sourcing';
+
+// ==========================================
+// SECTION 6: ALTERNATE SOURCING INQUIRY PORTAL TYPES
+// ==========================================
+
+export type InquiryStatus = 'DRAFT' | 'PUBLISHED' | 'EVALUATING' | 'CLOSED';
+export type SourcingRole = 'admin' | 'indenter';
+
+export interface DesignatedIndentor {
+  id: string;
+  name: string;
+  repName: string;
+  email: string;
+  phone: string;
+  country: string;
+  specialization: string;
+}
+
+export interface TechnicalDocumentItem {
+  id: string;
+  name: string;
+  docType: string;
+  size: string;
+  uploadDate: string;
+  url?: string;
+}
+
+export interface IndentorQuoteResponse {
+  indentorId: string;
+  indentorName: string;
+  materialId: string;
+  materialCode: string;
+  status: 'DRAFT' | 'SUBMITTED';
+  submittedAt?: string;
+  lastUpdated?: string;
+
+  // Sample Quantities Acknowledgement
+  sample1stLotAck: 'Yes' | 'No' | '';
+  sample1stLotRemarks: string;
+  sample2ndLotAck: 'Yes' | 'No' | '';
+  sample2ndLotRemarks: string;
+  focSampleQtyRemarks: string; // Proposed FOC Sample Qty if different or remarks
+
+  // Manufacturing Details & Commercials
+  manufacturerName: string;
+  mfgOrigin: string;
+  supplierName: string;
+  quotedRate: string; // e.g. "USD 24.50/KG CPT Air Karachi"
+  quotedRateNumeric: number;
+  currency: 'USD' | 'EUR' | 'GBP' | 'CNY';
+  incoterm: 'CPT Air Khi' | 'CFR Sea Khi' | 'FOB' | 'CIF Khi' | 'EXW';
+  moq?: number;
+  leadTimeWeeks?: number;
+  paymentTerms?: string;
+
+  // COA, Specifications & Customer List
+  coaAck: 'Yes' | 'No' | 'Under Review' | '';
+  coaFailingParameters?: string; // Required when COA is not 100% compliant with Atco Specs
+  supplierRemarks: string;
+  clientList: string; // Local / Export
+  auditAck: 'Yes' | 'No' | 'Scheduled' | 'N/A' | '';
+
+  // International Accreditations (Yes / No / N/A)
+  certUsFda: 'YES' | 'NO' | 'N/A' | '';
+  certCep: 'YES' | 'NO' | 'N/A' | '';
+  certTgaKdmfJdmfAnvisa: 'YES' | 'NO' | 'N/A' | '';
+
+  // Technical Documents Availability
+  techDocsAvailable: 'YES' | 'NO' | '';
+  questionnaire: 'YES' | 'NO' | '';
+  agreement: 'YES' | 'NO' | '';
+  dmfOpen: 'YES' | 'NO' | '';
+  dmfClose: 'YES' | 'NO' | '';
+  gmp: 'YES' | 'NO' | '';
+  dml: 'YES' | 'NO' | '';
+  msds: 'YES' | 'NO' | '';
+
+  // Stability Data
+  stabilityAccelerated6m: 'YES' | 'NO' | '';
+  stabilityLongTermZoneIV: 'YES' | 'NO' | '';
+
+  // Certifications
+  certIso: 'YES' | 'NO' | '';
+  certHalal: 'YES' | 'NO' | '';
+  certTseBse: 'YES' | 'NO' | '';
+  certSmf: 'YES' | 'NO' | '';
+  certNitrosamine: 'YES' | 'NO' | '';
+  certTransportationDecl: 'YES' | 'NO' | '';
+
+  // Cloud Dossier
+  googleDriveFolderLink: string;
+  uploadedDocs?: TechnicalDocumentItem[];
+}
+
+export interface AtcoSpecDocument {
+  id: string;
+  fileName: string;
+  fileUrl?: string;
+  fileSize?: string;
+  monograph?: string; // e.g. "BP / EP / USP"
+  matchScore?: number; // 0-100% confidence
+  matchedAt?: string;
+  parametersCount?: number;
+  testLimitSummary?: string;
+}
+
+export interface InquiryMaterialItem {
+  id: string;
+
+  // Basic Material Information (Admin Excel Uploaded)
+  importOrLocal?: 'IMPORT' | 'LOCAL' | string; // <-- [NEW FIELD: ADMIN-ONLY]
+  materialCode: string;
+  materialName: string;
+  atcoSpecsDoc?: AtcoSpecDocument; // <-- [Auto-matched Specs file: Visible to Admin & Indenter]
+  annualQty: number;
+  perLotQty: number;
+  uom: string;
+  lastBuyingPriceUSD?: number; // <-- [NEW FIELD: ADMIN-ONLY]
+  shipmentMode: 'SEA' | 'AIR' | 'ROAD';
+  apiExp: 'API' | 'EXCIPIENT' | 'PACKAGING' | 'HERBAL';
+
+  // Innovators / Benchmark
+  preferMfg: string; // For reference only, if you can arrange
+  preferOrigin: string; // For reference only
+  atcoPreferredOrigin: string; // Atco Required Sources from below Origins
+  approxInitialSampleQty: string; // Approximate Initial Sample Qty from 1st lot (Ack required)
+  approxTrialSampleQty: string; // Approximate Trial Sample Qty from 2nd lot (Ack required)
+  
+  benchmarkPriceUSD?: number; // Target price for comparison
+
+  // Internal Admin-Only Columns (STRICTLY Hidden from Indenter View)
+  activeMfgs: string;
+  customDataMfgs: string;
+  underDevelopmentStatus:
+    | 'Pending Inquiry'
+    | 'Published'
+    | 'Sample Under Testing'
+    | 'At Stability'
+    | 'At PD Priority'
+    | 'Approved'
+    | 'Under Arrangement';
+
+  // Indenter Access & Quotes
+  assignedIndentorIds: string[]; // List of indentors invited
+  responses: Record<string, IndentorQuoteResponse>; // key is indentorId
+}
+
+// Stripped version visible to Indenter/Vendor (CLS - Column Level Security)
+export type IndenterVisibleMaterialItem = Omit<
+  InquiryMaterialItem,
+  | 'importOrLocal'
+  | 'lastBuyingPriceUSD'
+  | 'activeMfgs'
+  | 'customDataMfgs'
+  | 'underDevelopmentStatus'
+  | 'benchmarkPriceUSD'
+>;
+
+export interface InquiryMasterHeader {
+  inquiryNumber: string;
+  title: string;
+  status: InquiryStatus;
+  createdAt: string;
+  publishedAt?: string;
+  closingDate?: string;
+  publishedBy: string;
+  notes?: string;
+}
 

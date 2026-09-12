@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   const { currency, setCurrency, resetAllDataToDefault } = useData();
 
   return (
-    <header className="sticky top-0 z-30 bg-slate-900 border-b border-slate-800 text-white shadow-xl">
+    <header className="bg-slate-900 border-b border-slate-800 text-white">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Left Side: Hamburger + Strategic Sourcing Header */}
         <div className="flex items-center gap-3.5 w-full md:w-auto justify-between md:justify-start">
@@ -81,15 +81,17 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Direct File Upload & Refresh Buttons */}
           <div className="flex items-center gap-2">
-            <button
-              id="header-upload-btn"
-              onClick={onOpenUpload}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow transition-all border border-blue-400/30"
-              title="Upload & Manage Monthly CSV Files"
-            >
-              <UploadCloud className="w-4 h-4" />
-              <span>Upload CSV</span>
-            </button>
+            {currentUser?.accessLevel === 'operational' && (
+              <button
+                id="header-upload-btn"
+                onClick={onOpenUpload}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow transition-all border border-blue-400/30"
+                title="Upload & Manage Monthly CSV Files"
+              >
+                <UploadCloud className="w-4 h-4" />
+                <span>Upload CSV</span>
+              </button>
+            )}
 
             <button
               id="header-refresh-btn"

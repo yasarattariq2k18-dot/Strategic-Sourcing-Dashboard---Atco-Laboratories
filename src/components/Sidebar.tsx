@@ -8,8 +8,8 @@ import {
   FileSpreadsheet,
   UploadCloud,
   TrendingUp,
-  Mail,
   Sparkles,
+  SendHorizontal,
   LogOut,
   User,
 } from 'lucide-react';
@@ -40,88 +40,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const isOperational = currentUser?.accessLevel === 'operational';
 
-  const navPages = isOperational
-    ? [
-        {
-          id: 'dashboard' as const,
-          label: '1. Executive Dashboard & Trees',
-          desc: 'Top 4 Cards, 2 Trees, 6 Charts, 3 Matrices & Initiatives',
-          icon: LayoutDashboard,
-          badge: 'Main',
-        },
-        {
-          id: 'savings' as const,
-          label: '2. Procurement Saving Details',
-          desc: 'Matured, CPHI, Project & Historic POs',
-          icon: DollarSign,
-          badge: '$3.2M',
-        },
-        {
-          id: 'active_avl' as const,
-          label: '3. Active Profile & AVL Status',
-          desc: '445 Active Materials, 728 Mfg & Origins',
-          icon: ShieldCheck,
-          badge: '445 SKUs',
-        },
-        {
-          id: 'under_dev' as const,
-          label: '4. Under Development Pipeline',
-          desc: '4 Pipeline Stages, Quotes & Lab Studies',
-          icon: Layers,
-          badge: '4 Stages',
-        },
-        {
-          id: 'quotations' as const,
-          label: '5. Indentor Quotes & Email Extractor',
-          desc: 'Outlook & Excel Rate Extraction & Audit Hub',
-          icon: Mail,
-          badge: 'SCM Ops',
-        },
-        {
-          id: 'process_improvement' as const,
-          label: '6. Process Improvement & Digitalization',
-          desc: '12 Performed Initiatives & 3 In-Progress Projects',
-          icon: Sparkles,
-          badge: '15 Init',
-        },
-      ]
-    : [
-        {
-          id: 'dashboard' as const,
-          label: '1. Executive Dashboard & Trees',
-          desc: 'Top 4 Cards, 2 Trees, 6 Charts, 3 Matrices & Initiatives',
-          icon: LayoutDashboard,
-          badge: 'Main',
-        },
-        {
-          id: 'savings' as const,
-          label: '2. Procurement Saving Details',
-          desc: 'Matured, CPHI, Project & Historic POs',
-          icon: DollarSign,
-          badge: '$3.2M',
-        },
-        {
-          id: 'active_avl' as const,
-          label: '3. Active Profile & AVL Status',
-          desc: '445 Active Materials, 728 Mfg & Origins',
-          icon: ShieldCheck,
-          badge: '445 SKUs',
-        },
-        {
-          id: 'under_dev' as const,
-          label: '4. Under Development Pipeline',
-          desc: '4 Pipeline Stages, Quotes & Lab Studies',
-          icon: Layers,
-          badge: '4 Stages',
-        },
-        {
-          id: 'process_improvement' as const,
-          label: '5. Process Improvement & Digitalization',
-          desc: '12 Performed Initiatives & 3 In-Progress Projects',
-          icon: Sparkles,
-          badge: '15 Init',
-        },
-      ];
+  const navPages = [
+    {
+      id: 'dashboard' as const,
+      label: '1. Executive Dashboard & Trees',
+      desc: 'Top 4 Cards, 2 Trees, 6 Charts, 3 Matrices & Initiatives',
+      icon: LayoutDashboard,
+      badge: 'Main',
+    },
+    {
+      id: 'savings' as const,
+      label: '2. Procurement Saving Details',
+      desc: 'Matured, CPHI, Project & Historic POs',
+      icon: DollarSign,
+      badge: '$3.2M',
+    },
+    {
+      id: 'active_avl' as const,
+      label: '3. Active Profile & AVL Status',
+      desc: '445 Active Materials, 728 Mfg & Origins',
+      icon: ShieldCheck,
+      badge: '445 SKUs',
+    },
+    {
+      id: 'under_dev' as const,
+      label: '4. Under Development Pipeline',
+      desc: '4 Pipeline Stages, Quotes & Lab Studies',
+      icon: Layers,
+      badge: '4 Stages',
+    },
+    {
+      id: 'process_improvement' as const,
+      label: '5. Process Improvement & Digitalization',
+      desc: '12 Performed Initiatives & 3 In-Progress Projects',
+      icon: Sparkles,
+      badge: '15 Init',
+    },
+    {
+      id: 'alternate_sourcing' as const,
+      label: '6. Alternate Sourcing Inquiry Portal',
+      desc: 'Dynamic RFQ Ingestion, Role-Based Indenter Forms & Evaluation Matrix',
+      icon: SendHorizontal,
+      badge: 'Portal',
+    },
+  ];
 
 
   return (
@@ -202,21 +164,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
             );
           })}
 
-          <div className="pt-4 border-t border-slate-800 px-2">
-            <button
-              onClick={() => {
-                onOpenUpload();
-                if (window.innerWidth < 1024) onClose();
-              }}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-                <span>Monthly CSV Manager</span>
-              </div>
-              <span className="text-[10px] text-emerald-400">6 Files</span>
-            </button>
-          </div>
+          {isOperational && (
+            <div className="pt-4 border-t border-slate-800 px-2">
+              <button
+                onClick={() => {
+                  onOpenUpload();
+                  if (window.innerWidth < 1024) onClose();
+                }}
+                className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                  <span>Monthly CSV Manager</span>
+                </div>
+                <span className="text-[10px] text-emerald-400">6 Files</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Sidebar Footer */}

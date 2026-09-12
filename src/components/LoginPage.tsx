@@ -69,15 +69,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       return;
     }
 
-    // Check credentials for either Executive or SCM Operational access
-    const isExecutive =
-      trimmedEmail === 'executives@atcolab.com' && trimmedPass === 'executive321';
+    // Check credentials for either Management or SCM Operational access
+    const isManagement =
+      trimmedEmail === 'management@atcolab.com' && trimmedPass === 'management321';
     const isOperational =
       trimmedEmail === 'scm@atcolab.com' && trimmedPass === 'scm@321';
 
-    if (!isExecutive && !isOperational) {
+    if (!isManagement && !isOperational) {
       setError(
-        'Invalid credentials. Please enter authorized ID (executives@atcolab.com or scm@atcolab.com) and Password.'
+        'Invalid credentials. Please enter authorized ID (management@atcolab.com or scm@atcolab.com) and Password.'
       );
       return;
     }
@@ -107,15 +107,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setTimeout(() => {
       setIsLoading(false);
 
-      const authUser: AuthUser = isExecutive
+      const authUser: AuthUser = isManagement
         ? {
-            id: 'usr-exec-01',
-            name: 'Executive Leadership',
-            email: 'executives@atcolab.com',
-            role: 'Executive Director',
-            department: 'Strategic Sourcing & Procurement',
-            badgeCode: 'EXEC-001',
-            accessLevel: 'executive',
+            id: 'usr-mgmt-01',
+            name: 'Executive Management',
+            email: 'management@atcolab.com',
+            role: 'Corporate Management',
+            department: 'Strategic Sourcing & Corporate Leadership',
+            badgeCode: 'MGMT-001',
+            accessLevel: 'management',
             lastLogin: new Date().toLocaleString(),
           }
         : {

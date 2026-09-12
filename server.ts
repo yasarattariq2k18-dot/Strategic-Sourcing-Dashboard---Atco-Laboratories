@@ -159,6 +159,41 @@ ${secondary ? `
   }
 });
 
+// Real-time Inquiry state store in memory
+let inquiryServerState: {
+  status: string;
+  publishedAt?: string;
+  submissions: Record<string, any>;
+} = {
+  status: 'PUBLISHED',
+  publishedAt: '2025-02-18T00:00:00Z',
+  submissions: {},
+};
+
+app.get('/api/inquiries/state', (req, res) => {
+  res.json({ status: 'ok', data: inquiryServerState });
+});
+
+app.post('/api/inquiries/publish', (req, res) => {
+  const { publishedAt, closingDate } = req.body;
+  inquiryServerState.status = 'PUBLISHED';
+  inquiryServerState.publishedAt = publishedAt || new Date().toISOString();
+  res.json({ status: 'ok', message: 'Inquiry broadcasted to designated indentors', state: inquiryServerState });
+});
+
+app.post('/api/inquiries/submit-line', (req, res) => {
+  const { materialId, indentorId, response } = req.body;
+  if (!materialId || !indentorId) {
+    return res.status(400).json({ error: 'materialId and indentorId required' });
+  }
+  const key = `${materialId}_${indentorId}`;
+  inquiryServerState.submissions[key] = {
+    ...response,
+    receivedAt: new Date().toISOString(),
+  };
+  res.json({ status: 'ok', message: 'Line item response locked and persisted', key });
+});
+
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
