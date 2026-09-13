@@ -357,6 +357,7 @@ export type TabPageKey =
   | 'active_avl'
   | 'under_dev'
   | 'process_improvement'
+  | 'indentor_guide'
   | 'alternate_sourcing';
 
 // ==========================================

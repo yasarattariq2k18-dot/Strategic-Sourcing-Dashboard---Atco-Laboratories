@@ -52,7 +52,7 @@ const AlternateSourcingInner: React.FC = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-                Section 6: Alternate Sourcing Inquiry Portal
+                Section 7: Alternate Sourcing Inquiry Portal
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
                 Dynamic Role-Based RFQ Floating & Side-by-Side Comparative Evaluation System
@@ -61,8 +61,17 @@ const AlternateSourcingInner: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Status Pill */}
+        {/* Live Status Pill & Indentor Guide Button */}
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              const el = document.getElementById('tab-indentor_guide');
+              if (el) el.click();
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors"
+          >
+            <span>📖 View Indentor Guide</span>
+          </button>
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${
               header.status === 'PUBLISHED'

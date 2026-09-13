@@ -11,6 +11,7 @@ import { ProcurementSavingsPage } from './components/pages/ProcurementSavingsPag
 import { ActiveProfileAvlPage } from './components/pages/ActiveProfileAvlPage';
 import { UnderDevelopmentPage } from './components/pages/UnderDevelopmentPage';
 import { ProcessImprovementSection } from './components/ProcessImprovementSection';
+import { IndentorGuidePage } from './components/pages/IndentorGuidePage';
 import { AlternateSourcingPage } from './components/pages/AlternateSourcingPage';
 import { UploadModal } from './components/UploadModal';
 import { DetailModal } from './components/DetailModal';
@@ -25,6 +26,7 @@ import {
   ChevronRight,
   Layers,
   Sparkles,
+  Compass,
   SendHorizontal,
   X,
 } from 'lucide-react';
@@ -92,8 +94,14 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ currentUser, onLogo
       activeClass: 'bg-slate-900 text-white shadow-xs border border-slate-950',
     },
     {
+      id: 'indentor_guide' as const,
+      label: '6. Alternate Source Development – Indentor Guide',
+      icon: Compass,
+      activeClass: 'bg-indigo-700 text-white shadow-xs border border-indigo-800',
+    },
+    {
       id: 'alternate_sourcing' as const,
-      label: '6. Alternate Sourcing Inquiry Portal',
+      label: '7. Alternate Sourcing Inquiry Portal',
       icon: SendHorizontal,
       activeClass: 'bg-emerald-700 text-white shadow-xs border border-emerald-800',
     },
@@ -209,7 +217,12 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ currentUser, onLogo
         )}
 
         {/* ========================================================= */}
-        {/* 6. ALTERNATE SOURCING INQUIRY PORTAL */}
+        {/* 6. ALTERNATE SOURCE DEVELOPMENT - INDENTOR GUIDE */}
+        {/* ========================================================= */}
+        {currentPage === 'indentor_guide' && <IndentorGuidePage />}
+
+        {/* ========================================================= */}
+        {/* 7. ALTERNATE SOURCING INQUIRY PORTAL */}
         {/* ========================================================= */}
         {currentPage === 'alternate_sourcing' && <AlternateSourcingPage />}
 
